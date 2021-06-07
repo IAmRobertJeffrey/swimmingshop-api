@@ -22,6 +22,11 @@ app.use(bodyParser.json());
 const productsRoute = require('./routes/products');
 app.use('/products', productsRoute);
 
+app.get('/', (request, response) =>
+{
+    response.json('Hello, you are in the default directory.')
+})
+
 const usersRoute = require('./routes/users');
 app.use('/users', usersRoute);
 
