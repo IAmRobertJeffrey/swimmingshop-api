@@ -52,5 +52,5 @@ jobs:
       with:
         app-name: 'swimmingshop-api'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c790898c2bf8419db6c9afc853125d46 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_bb501db91b3a47488d2e691c38b02c9c }}
         package: .
