@@ -36,4 +36,4 @@ mongoose.connect('mongodb+srv://frontend:frontend@robertsfreecluster.kkllv.mongo
 
 
 //Listen to server
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
