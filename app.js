@@ -5,8 +5,6 @@ const bodyParser = require('body-parser');
 require('dotenv/config');
 const cors = require("cors");
 
-//USE CORS ONCE HOSTED
-
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -36,17 +34,14 @@ mongoose.connect('mongodb+srv://frontend:frontend@robertsfreecluster.kkllv.mongo
 
 
 //Listen to server
-// app.set('port', process.env.PORT || 3000);
-
-let port = process.env.PORT || 3000;
+app.set('port', process.env.PORT || 3000);
 
 app.get('/', (request, response) =>
 {
     response.send('Hello, you are in the default directory.')
 })
 
-// app.listen(app.get('port'), function(){
-//     console.log('Express server listening on port ' + app.get('port'));
-// });
+app.listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
+});
 
-app.listen(port, () => console.log("helloooo i'm running on " + port))
