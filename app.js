@@ -29,7 +29,7 @@ const ordersRoute = require('./routes/orders')
 app.use('/orders', ordersRoute)
 
 
-mongoose.connect('mongodb+srv://frontend:frontend@robertsfreecluster.kkllv.mongodb.net/swimmingshopdb?ssl=true&sslverifycertificate=false&retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://frontend:frontend@robertsfreecluster.kkllv.mongodb.net/swimmingshopdb?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(response => {
         console.log("connected to db")
     })
