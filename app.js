@@ -13,7 +13,7 @@ const cors = require("cors");
 //     next();
 // });
 
-app.use(cors);
+// app.use(cors);
 
 //Middlewares
 app.use(bodyParser.json());
