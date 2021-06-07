@@ -22,11 +22,6 @@ app.use(bodyParser.json());
 const productsRoute = require('./routes/products');
 app.use('/products', productsRoute);
 
-app.get('/', (request, response) =>
-{
-    response.json('Hello, you are in the default directory.')
-})
-
 const usersRoute = require('./routes/users');
 app.use('/users', usersRoute);
 
@@ -41,8 +36,17 @@ mongoose.connect('mongodb+srv://frontend:frontend@robertsfreecluster.kkllv.mongo
 
 
 //Listen to server
-app.set('port', process.env.PORT || 3000);
+// app.set('port', process.env.PORT || 3000);
 
-app.listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-});
+let port = process.env.PORT || 3000;
+
+app.get('/', (request, response) =>
+{
+    response.send('Hello, you are in the default directory.')
+})
+
+// app.listen(app.get('port'), function(){
+//     console.log('Express server listening on port ' + app.get('port'));
+// });
+
+app.listen(port, () => console.log("helloooo i'm running on " + port))
