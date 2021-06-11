@@ -42,7 +42,8 @@ router.post('/',async (request, result) =>
     const product = new Product({
         productName: request.body.productName,
         productPrice: request.body.productPrice,
-        productStock: request.body.productStock
+        productStock: request.body.productStock,
+        productImage: request.body.productImage
     })
     try {
         const savedProduct = await product.save();
@@ -89,6 +90,12 @@ router.patch('/:productId', async (request, result) =>
         {
             updatedProduct = await Product.findByIdAndUpdate(request.params.productId, {
                 productStock: request.body.productStock,
+            }, {new: true, useFindAndModify: false});
+        }
+        if(request.body.productImage)
+        {
+            updatedProduct = await Product.findByIdAndUpdate(request.params.productId, {
+                productImage: request.body.productImage,
             }, {new: true, useFindAndModify: false});
         }
 

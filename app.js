@@ -35,10 +35,12 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
 
 //Listen to server
 app.set('port', process.env.PORT || 3000);
-
 app.get('/', (request, response) =>
 {
-    response.send('Hello, you are in the default directory.')
+    const rootObject = {
+        routes: ["/users", "/products", "/orders"]
+    }
+    response.json(rootObject)
 })
 
 app.listen(app.get('port'), function(){
