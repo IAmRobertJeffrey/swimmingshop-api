@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const checkAuth = require('../middleware/checkAuth');
 const router = express.Router();
 const Product = require('../models/product')
 
@@ -107,7 +108,7 @@ router.patch('/:productId', async (request, result) =>
     }
 })
 
-router.patch('/addStock/:productId', async (request, result) =>
+router.patch('/addStock/:productId', checkAuth, async (request, result) =>
 {
     try
     {

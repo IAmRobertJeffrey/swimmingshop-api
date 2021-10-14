@@ -1,11 +1,12 @@
-const express = require('express')
+const express = require('express');
+const checkAuth = require('../middleware/checkAuth');
 const router = express.Router();
 const Order = require("../models/order")
 const Product = require("../models/product")
 const User = require("../models/user")
 
 
-router.get('/', async (request, response) =>
+router.get('/', checkAuth,  async (request, response) =>
 {
     try
     {
@@ -18,7 +19,7 @@ router.get('/', async (request, response) =>
     }
 })
 
-router.get('/:orderId', async (request, response) =>
+router.get('/:orderId', checkAuth, async (request, response) =>
 {
     try
     {
@@ -42,7 +43,7 @@ router.get('/:orderId', async (request, response) =>
     }
 })
 
-router.post('/', async (request, response) =>
+router.post('/', checkAuth, async (request, response) =>
 {
     try {
         const searchedProducts = request.body.productIds
@@ -212,7 +213,7 @@ router.post('/', async (request, response) =>
     }
 })
 
-router.delete('/:orderId', async (request, response) => {
+router.delete('/:orderId', checkAuth, async (request, response) => {
     try
     {
         const orderToCheck = await Order.findById(request.params.orderId)

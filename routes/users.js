@@ -1,6 +1,10 @@
+const { request } = require('express');
 const express = require('express')
 const router = express.Router();
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const checkAuth = require('../middleware/checkAuth')
 
 router.get('/', async (request, result) =>
 {
@@ -14,7 +18,7 @@ router.get('/', async (request, result) =>
     }
 })
 
-router.get('/:userId', async (request, result) =>
+router.get('/:userId', checkAuth, async (request, result) =>
 {
     try{
         const user = await User.findById(request.params.userId)
@@ -23,7 +27,8 @@ router.get('/:userId', async (request, result) =>
         }
         else
         {
-            const errorObject = {
+            const errorObject =
+            {
                 response: "The provided (userId) from the request parameter does not exist."
             }
             result.json(errorObject)
@@ -35,25 +40,112 @@ router.get('/:userId', async (request, result) =>
     }
 })
 
-router.post('/', async(request, result) =>
+router.post('/login', async (request, result) =>
 {
-    const newUser = new User({
-        username: request.body.username,
-        userPassword: request.body.userPassword,
-        userEmail: request.body.userEmail
-    });
+    try
+    {
+        if(request.body.username && request.body.userPassword)
+        {
+            const user = await User.find({ username: request.body.username, userPassword: request.body.userPassword})
+            .exec()
+            .then(users => 
+            {
+                if(users[0])
+                {
+                    const token = jwt.sign({
+                        email: users[0].userEmail,
+                        username: users[0].username
+                    }, 
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn:"1h"
+                    })
+                  return result.status(200).json(
+                    {
+                        token:token,
+                        message:"Authorization Successful"
+                    })
+                }
+                else
+                {
+                    result.json("Credentials do not match our records.")
+                }
+            })         
+        }
+        else
+        {
+            result.json("either username or password not provided.")
+        }
 
-    try {
-        const savedUser = await newUser.save();
-        result.json(savedUser)
     }
     catch(err)
     {
-        result.json(err)
+        result.json(err);
     }
 })
 
-router.delete('/:userId', async (request, result) =>
+router.post('/', checkAuth, async(request, result) =>
+{
+    if(request.body.username && request.body.userPassword && request.body.userEmail)
+    {
+        const newUser = new User({
+            username: request.body.username,
+            userPassword: request.body.userPassword,
+            userEmail: request.body.userEmail
+        });
+        
+        try 
+        {
+            const users = await User.find(
+            {
+                $or:
+                [
+                    {
+                        username: request.body.username
+                    },
+                    {
+                        userEmail: request.body.userEmail
+                    }
+                ]
+            }) 
+            console.log(users);
+           
+                if(users.length > 0)
+                {  
+                    let usernameCheck = "";
+                    let userEmailCheck = "";
+                    users.forEach(current => 
+                    {
+                        if(request.body.username === current.username)
+                        {
+                            usernameCheck = "Username already exists. ";
+                        }
+                        if(request.body.userEmail === current.userEmail)
+                        {
+                            userEmailCheck = "Email already exists. ";
+                        }
+                    })
+                    result.json(usernameCheck + userEmailCheck)
+                }
+                else
+                {
+                    const savedUser = await newUser.save();
+                    result.json(savedUser)
+                
+                }     
+        }
+        catch(error)
+        {
+            result.json(error)
+        }   
+    }
+    else
+    {
+        result.json("username, password or email not entered")
+    }
+})
+
+router.delete('/:userId', checkAuth , async (request, result) =>
 {
     try
     {
@@ -75,7 +167,7 @@ router.delete('/:userId', async (request, result) =>
     }
 })
 
-router.patch('/:userId', async (request, result) =>
+router.patch('/:userId', checkAuth, async (request, result) =>
 {
     try
     {
@@ -121,17 +213,6 @@ router.patch('/:userId', async (request, result) =>
                 }
             result.json(errorObject)
         }
-
-        // const updatedUser = await User.updateOne(
-        //     {_id: request.params.userId},
-        //     {
-        //         $set:
-        //             {
-        //                 username: request.body.username
-        //             }
-        //     });
-
-
     }
     catch (err)
     {
