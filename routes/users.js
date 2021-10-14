@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const checkAuth = require('../middleware/checkAuth')
 
-router.get('/', async (request, result) =>
+router.get('/', checkAuth, async (request, result) =>
 {
     try{
         const users = await User.find();
