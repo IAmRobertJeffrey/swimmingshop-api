@@ -60,6 +60,7 @@ router.post('/login', async (request, result) =>
                     {
                         expiresIn:"1h"
                     })
+                    console.log("auth successful technically")
                   return result.status(200).json(
                     {
                         token:token,
@@ -68,19 +69,21 @@ router.post('/login', async (request, result) =>
                 }
                 else
                 {
-                    result.json("Credentials do not match our records.")
+                    console.log("bad credentials")
+                    return result.json("Credentials do not match our records.")
                 }
             })         
         }
         else
         {
-            result.json("either username or password not provided.")
+            console.log("no user or password")
+            return result.json("either username or password not provided.")
         }
 
     }
     catch(err)
     {
-        result.json(err);
+        return result.json(err);
     }
 })
 
